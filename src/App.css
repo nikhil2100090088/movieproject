@@ -1,0 +1,107 @@
+/* App.css */
+
+/* General styles */
+body {
+    background-color: black;
+    color: white;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Navbar styles */
+  .navbar {
+    background-color: #1a1a1a;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .navbar a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+    font-weight: bold;
+  }
+  
+  .navbar a:hover {
+    color: #ff6600;
+  }
+  
+  /* Poster styles */
+  .poster {
+    text-align: center;
+    padding: 20px;
+    background: url('path-to-your-poster-image.jpg') no-repeat center center;
+    background-size: cover;
+    color: white;
+  }
+  
+  .poster h1 {
+    font-size: 3em;
+    margin: 0;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Movies styles */
+  .movies {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .movie-card {
+    background-color: #333;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    width: 200px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s;
+  }
+  
+  .movie-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .movie-card img {
+    width: 100%;
+    border-radius: 8px;
+  }
+  
+  .movie-card h3 {
+    margin: 10px 0 5px 0;
+  }
+  
+  /* WatchList styles */
+  .watchlist {
+    padding: 20px;
+  }
+  
+  .watchlist-item {
+    background-color: #444;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .watchlist-item button {
+    background-color: #ff6600;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .watchlist-item button:hover {
+    background-color: #cc5200;
+  }
+  

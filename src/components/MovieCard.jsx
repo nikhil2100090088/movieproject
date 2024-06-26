@@ -37,7 +37,11 @@ function MovieCard({ poster_path, name }) {
     <div
       className='relative h-[40vh] w-[200px] bg-center bg-cover rounded-xl hover:scale-110 duration-300'
       style={{ backgroundImage: `url(${imageUrl})` }}
+      
     >
+      <div className=' m-4 flex justify-center h-8 w-8 items-center rounded-lg bg-gray-900/60'> 
+        &#128525;
+      </div>
       {/* Overlay div for text */}
       <div className='absolute bottom-0 left-0 right-0 text-white  p-2 bg-gray-900/80'>
         <div className='text-center'>{name}</div>
