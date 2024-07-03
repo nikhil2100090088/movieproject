@@ -1,47 +1,163 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import genre from '../utility/genre';
 
-const WatchList = () => {
+function Watchlist({ watchlist, handleRemoveFromWatchList }) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortedWatchlist, setSortedWatchlist] = useState(watchlist);
+  const [genreList, setGenreList] = useState(['All Genres']);
+  const [curGenre, setCurGenre] = useState('All Genres');
+  const [showNotification, setShowNotification] = useState(false);
+
+  useEffect(() => {
+    setSortedWatchlist(watchlist);
+  }, [watchlist]);
+
+  useEffect(() => {
+    const temp = watchlist.map((movieObj) => genre[movieObj.genre_ids[0]]);
+    setGenreList(['All Genres', ...new Set(temp)]);
+  }, [watchlist]);
+
+  const handleFilter = (genre) => {
+    setCurGenre(genre);
+  };
+
+  const filteredWatchlist = sortedWatchlist.filter((movie) => {
+    const matchesTitle = movie.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesGenre = curGenre === 'All Genres' || genre[movie.genre_ids[0]] === curGenre;
+    return matchesTitle && matchesGenre;
+  });
+
+  const sortIncreasingByRating = () => {
+    const sortedIncreasing = [...sortedWatchlist].sort(
+      (movieA, movieB) => movieA.vote_average - movieB.vote_average
+    );
+    setSortedWatchlist(sortedIncreasing);
+  };
+
+  const sortDecreasingByRating = () => {
+    const sortedDecreasing = [...sortedWatchlist].sort(
+      (movieA, movieB) => movieB.vote_average - movieA.vote_average
+    );
+    setSortedWatchlist(sortedDecreasing);
+  };
+
+  const sortIncreasingByPopularity = () => {
+    const sortedIncreasing = [...sortedWatchlist].sort(
+      (movieA, movieB) => movieA.popularity - movieB.popularity
+    );
+    setSortedWatchlist(sortedIncreasing);
+  };
+
+  const sortDecreasingByPopularity = () => {
+    const sortedDecreasing = [...sortedWatchlist].sort(
+      (movieA, movieB) => movieB.popularity - movieA.popularity
+    );
+    setSortedWatchlist(sortedDecreasing);
+  };
+
+  const handleRemoveAndNotify = (movie) => {
+    const deletedHistory = JSON.parse(localStorage.getItem('deletedHistory')) || [];
+    const updatedHistory = [...deletedHistory, { ...movie, image: `https://image.tmdb.org/t/p/original/${movie.backdrop_path}` }];
+    localStorage.setItem('deletedHistory', JSON.stringify(updatedHistory));
+
+    handleRemoveFromWatchList(movie);
+    setShowNotification(true);
+    setTimeout(() => setShowNotification(false), 3000); // Hide notification after 3 seconds
+  };
+
   return (
     <>
+      <div className='flex justify-center flex-wrap m-4'>
+        {genreList.map((genre) => (
+          <div
+            key={genre}
+            onClick={() => handleFilter(genre)}
+            className={`flex justify-center items-center h-[3rem] w-[8rem] rounded-xl text-white font-bold m-4  ${
+              curGenre === genre ? 'bg-blue-500' : 'bg-red-600'
+            } cursor-pointer`}
+          >
+            {genre}
+          </div>
+        ))}
+        {/* <div className='flex justify-center items-center h-[2rem] w-[6rem] rounded-xl text-white bg-gray-300 font-bold'>
+          Actions
+        </div> */}
+      </div>
 
-  <div className='flex justify-center flex-wrap m-4'>
-    <div className='flex justify-center items-center  h-[3rem] w-[10rem] bg-blue-400 rounded-xl text-white font-bold'> Action</div>
-    </div>  
-    <div className='flex flex-col items-center my-4'>
-      <input 
-        type="text" 
-        placeholder='Search Movies' 
-        className='h-[3rem] w-[18rem] border bg-gray-300 mb-4 p-2'  
-      />
-      
-      <table className='border-collapse border border-gray-200 w-full text-center'>
-        <thead className='border-b-2'>
-          <tr>
-            <th className='px-4 py-2'>Name</th>
-            <th className='px-4 py-2'>Popularity</th>
-            <th className='px-4 py-2'>Ratings</th>
-            <th className='px-4 py-2'>Genre</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className='border-b-2'>
-            <td className='flex items-center px-6 py-4'>
-              <img  className='h-[6rem] w-[10rem' src={ 'data:image/jpeg;base64,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'}></img>
-              <div className='mx-10'> JR.NTR</div>
-               </td> 
+      <div className='flex justify-center'>
+        <input
+          type='text'
+          placeholder='Search Movies'
+          className='h-[3rem] w-[16rem] bg-green-900 px-4'
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
 
-               <td> 8.5</td>
-               <td> 9</td>
-               <td> Action </td>
+      <div className='overflow-hidden rounded-lg border border-gray-200 m-8'>
+        <table className='w-full text-center text-gray-290'>
+          <thead className='border-b-2'>
+            <tr>
+              <th>Name</th>
+              <th>
+                <div className='flex items-center justify-center'>
+                  <div onClick={sortIncreasingByRating} className='p-2 cursor-pointer'>
+                    <i className='fa-solid fa-arrow-up'></i>
+                  </div>
+                  <div className='p-2'>Ratings</div>
+                  <div onClick={sortDecreasingByRating} className='p-2 cursor-pointer'>
+                    <i className='fa-solid fa-arrow-down'></i>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div className='flex items-center justify-center'>
+                  <div onClick={sortIncreasingByPopularity} className='p-2 cursor-pointer'>
+                    <i className='fa-solid fa-arrow-up'></i>
+                  </div>
+                  <div className='p-2'>Popularity</div>
+                  <div onClick={sortDecreasingByPopularity} className='p-2 cursor-pointer'>
+                    <i className='fa-solid fa-arrow-down'></i>
+                  </div>
+                </div>
+              </th>
+              <th>Genre</th>
+              {/* <th>Action</th> */}
+            </tr>
+          </thead>
+          <tbody>
+            {filteredWatchlist.map((movieObj) => (
+              <tr className='border-b-2' key={movieObj.id}>
+                <td className='px-4 py-4 flex items-center'>
+                  <img
+                    className='h-[6rem] w-[10rem]'
+                    src={`https://image.tmdb.org/t/p/original/${movieObj.backdrop_path}`}
+                    alt={movieObj.title}
+                  />
+                  <div className='mx-10'>{movieObj.title}</div>
+                </td>
+                <td>{movieObj.vote_average}</td>
+                <td>{movieObj.popularity}</td>
+                <td>{genre[movieObj.genre_ids[0]]}</td>
+                {/* <td
+                  className='text-red-800 cursor-pointer'
+                  onClick={() => handleRemoveAndNotify(movieObj)}
+                >
+                  Delete
+                </td> */}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-               <td className='text-red-800'>Delete </td>
-
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      {showNotification && (
+        <div className='fixed top-0 right-0 mt-4 mr-4 bg-green-500 text-white p-4 rounded shadow-lg'>
+          Deleted Successfully 🗑️
+        </div>
+      )}
     </>
-  )
+  );
 }
 
-export default WatchList
+export default Watchlist;
