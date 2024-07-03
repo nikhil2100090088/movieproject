@@ -139,12 +139,14 @@ function Watchlist({ watchlist, handleRemoveFromWatchList }) {
                 <td>{movieObj.vote_average}</td>
                 <td>{movieObj.popularity}</td>
                 <td>{genre[movieObj.genre_ids[0]]}</td>
-                {/* <td
-                  className='text-red-800 cursor-pointer'
-                  onClick={() => handleRemoveAndNotify(movieObj)}
-                >
-                  Delete
-                </td> */}
+                {
+                //  <td
+                //   className='text-red-800 cursor-pointer'
+                //   onClick={() => handleRemoveAndNotify(movieObj)}
+                // >
+                //   Delete
+                // </td> 
+                }
               </tr>
             ))}
           </tbody>
