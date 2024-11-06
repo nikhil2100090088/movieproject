@@ -27,7 +27,7 @@ function Banner() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
-    }, 3000); // Change the interval time (in milliseconds) as per your requirement
+    }, 6000); // Change the interval time (in milliseconds) as per your requirement
 
     return () => clearInterval(interval);
   }, [images]);

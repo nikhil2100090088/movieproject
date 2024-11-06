@@ -29,9 +29,9 @@ const Movies = ({ watchlist, handleAddWatchlist, handleRemoveFromWatchList }) =>
   }, [pageNo]);
 
   return (
-    <div className="p-5">
-      <div className="text-2xl m-5 font-bold text-center">Trending Movies</div>
-      <div className="flex flex-row flex-wrap justify-around gap-6">
+    <div className="p-4">
+      <div className="text-2xl m-10 font-bold text-center">Trending Movies</div>
+      <div className="flex flex-row flex-wrap justify-around gap-10">
         {movies.map((movieObj) => (
           <MovieCard
             key={movieObj.id}

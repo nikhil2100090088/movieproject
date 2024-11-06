@@ -14,7 +14,7 @@ function MovieCard({ movieObj, poster_path, name, watchlist, handleAddWatchlist,
 
   return (
     <div
-      className="relative h-[40vh] w-[200px] bg-center bg-cover rounded-xl hover:scale-110 duration-300"
+      className="relative h-[50vh] w-[250px] bg-center bg-cover rounded-xl hover:scale-110 duration-300"
       style={{ backgroundImage: `url(${imageUrl})` }}
     >
       <div
