@@ -30,7 +30,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route
-            path="/"
+            path="/movieproject/"
             element={
               <>
                 <Poster />
