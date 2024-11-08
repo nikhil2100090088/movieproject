@@ -15,7 +15,7 @@ function Banner() {
             page: 4
           }
         });
-        setImages(response.data.results); // Assuming 'results' contains the array of movies from the response
+        setImages(response.data.results);
       } catch (error) {
         console.error('Error fetching images:', error);
       }
@@ -27,7 +27,7 @@ function Banner() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
-    }, 6000); // Change the interval time (in milliseconds) as per your requirement
+    }, 6000);
 
     return () => clearInterval(interval);
   }, [images]);
@@ -44,21 +44,20 @@ function Banner() {
     <div className="relative">
       {images.length > 0 ? (
         <>
-          <div
-            className="h-[20vh] md:h-[85vh] bg-cover bg-center flex justify-center"
-            style={{
-              backgroundImage: `url(https://image.tmdb.org/t/p/original/${images[currentIndex].poster_path})`,
-              backgroundSize: 'contain', // Adjust 'contain' or 'cover' based on your preference
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat'
-            }}
-          >
-            <div className="absolute inset-0 flex items-end">
-              <div className="text-white text-xl text-center w-full bg-blue-900/60 p-2">
-                {images[currentIndex].title}
-              </div>
-            </div>
+          {/* Banner image */}
+          <div className="bg-grey-200 flex justify-center items-center h-[80vh]">
+            <img
+              className="object-cover h-full w-auto max-w-full rounded-md shadow-lg"
+              src={`https://image.tmdb.org/t/p/original/${images[currentIndex].backdrop_path}`}
+              alt={images[currentIndex].title}
+            />
           </div>
+
+          {/* Title area under the image with background color */}
+          <div className="w-full  text-white py-4  text-center shadow-lg">
+            <h3 className="text-2xl font-bold">{images[currentIndex].title}</h3>
+          </div>
+
           <button
             className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-blue-900 text-white p-2 rounded-full"
             onClick={handlePrev}
