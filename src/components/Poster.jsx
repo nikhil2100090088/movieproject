@@ -44,8 +44,8 @@ function Banner() {
     <div className="relative">
       {images.length > 0 ? (
         <>
-          {/* Banner image */}
-          <div className="bg-grey-200 flex justify-center items-center h-[80vh]">
+          {/* Banner image with margin above */}
+          <div className="bg-grey-200 flex justify-center items-center h-[80vh] mt-8">
             <img
               className="object-cover h-full w-auto max-w-full rounded-md shadow-lg"
               src={`https://image.tmdb.org/t/p/original/${images[currentIndex].backdrop_path}`}
@@ -54,7 +54,7 @@ function Banner() {
           </div>
 
           {/* Title area under the image with background color */}
-          <div className="w-full  text-white py-4  text-center shadow-lg">
+          <div className="w-full text-white py-4 text-center shadow-lg">
             <h3 className="text-2xl font-bold">{images[currentIndex].title}</h3>
           </div>
 

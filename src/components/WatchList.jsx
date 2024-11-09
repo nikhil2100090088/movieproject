@@ -1,31 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import genre from '../utility/genre';
+import React, { useState, useEffect } from 'react';
 
 function Watchlist({ watchlist, handleRemoveFromWatchList }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortedWatchlist, setSortedWatchlist] = useState(watchlist);
-  const [genreList, setGenreList] = useState(['All Genres']);
-  const [curGenre, setCurGenre] = useState('All Genres');
   const [showNotification, setShowNotification] = useState(false);
+  const [deletedMovieTitle, setDeletedMovieTitle] = useState('');
 
   useEffect(() => {
     setSortedWatchlist(watchlist);
   }, [watchlist]);
 
-  useEffect(() => {
-    const temp = watchlist.map((movieObj) => genre[movieObj.genre_ids[0]]);
-    setGenreList(['All Genres', ...new Set(temp)]);
-  }, [watchlist]);
-
-  const handleFilter = (genre) => {
-    setCurGenre(genre);
-  };
-
-  const filteredWatchlist = sortedWatchlist.filter((movie) => {
-    const matchesTitle = movie.title.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesGenre = curGenre === 'All Genres' || genre[movie.genre_ids[0]] === curGenre;
-    return matchesTitle && matchesGenre;
-  });
+  const filteredWatchlist = sortedWatchlist.filter((movie) =>
+    movie.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const sortIncreasingByRating = () => {
     const sortedIncreasing = [...sortedWatchlist].sort(
@@ -61,45 +48,29 @@ function Watchlist({ watchlist, handleRemoveFromWatchList }) {
     localStorage.setItem('deletedHistory', JSON.stringify(updatedHistory));
 
     handleRemoveFromWatchList(movie);
+    setDeletedMovieTitle(movie.title);  // Set the title of the deleted movie
     setShowNotification(true);
     setTimeout(() => setShowNotification(false), 3000); // Hide notification after 3 seconds
   };
 
   return (
     <>
-      <div className='flex justify-center flex-wrap m-4'>
-        {genreList.map((genre) => (
-          <div
-            key={genre}
-            onClick={() => handleFilter(genre)}
-            className={`flex justify-center items-center h-[3rem] w-[8rem] rounded-xl text-white font-bold m-4  ${
-              curGenre === genre ? 'bg-blue-500' : 'bg-red-600'
-            } cursor-pointer`}
-          >
-            {genre}
-          </div>
-        ))}
-        {/* <div className='flex justify-center items-center h-[2rem] w-[6rem] rounded-xl text-white bg-gray-300 font-bold'>
-          Actions
-        </div> */}
-      </div>
-
-      <div className='flex justify-center'>
+      <div className='flex justify-center mb-4'>
         <input
           type='text'
           placeholder='Search Movies'
-          className='h-[3rem] w-[16rem] bg-green-900 px-4'
+          className='h-[3rem] w-[16rem] bg-gray-800 text-white px-4 mt-9 rounded-lg shadow-md'
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
 
-      <div className='overflow-hidden rounded-lg border border-gray-200 m-8'>
-        <table className='w-full text-center text-gray-290'>
-          <thead className='border-b-2'>
+      <div className='overflow-x-auto rounded-lg border border-gray-200 shadow-lg m-8'>
+        <table className='min-w-full text-center text-gray-900'>
+          <thead className='bg-gray-800 text-white'>
             <tr>
-              <th>Name</th>
-              <th>
+              <th className='px-6 py-4 text-left'>Name</th>
+              <th className='px-6 py-4'>
                 <div className='flex items-center justify-center'>
                   <div onClick={sortIncreasingByRating} className='p-2 cursor-pointer'>
                     <i className='fa-solid fa-arrow-up'></i>
@@ -110,7 +81,7 @@ function Watchlist({ watchlist, handleRemoveFromWatchList }) {
                   </div>
                 </div>
               </th>
-              <th>
+              <th className='px-6 py-4'>
                 <div className='flex items-center justify-center'>
                   <div onClick={sortIncreasingByPopularity} className='p-2 cursor-pointer'>
                     <i className='fa-solid fa-arrow-up'></i>
@@ -121,32 +92,31 @@ function Watchlist({ watchlist, handleRemoveFromWatchList }) {
                   </div>
                 </div>
               </th>
-              <th>Genre</th>
-              {/* <th>Action</th> */}
+              <th className='px-6 py-4'>Action</th>
             </tr>
           </thead>
           <tbody>
             {filteredWatchlist.map((movieObj) => (
-              <tr className='border-b-2' key={movieObj.id}>
-                <td className='px-4 py-4 flex items-center'>
+              <tr
+                className='border-b-2 transition-all hover:bg-gray-100'
+                key={movieObj.id}
+              >
+                <td className='px-6 py-4 flex items-center'>
                   <img
-                    className='h-[6rem] w-[10rem]'
+                    className='h-[6rem] w-[10rem] rounded-md object-cover'
                     src={`https://image.tmdb.org/t/p/original/${movieObj.backdrop_path}`}
                     alt={movieObj.title}
                   />
-                  <div className='mx-10'>{movieObj.title}</div>
+                  <div className='mx-6'>{movieObj.title}</div>
                 </td>
-                <td>{movieObj.vote_average}</td>
-                <td>{movieObj.popularity}</td>
-                <td>{genre[movieObj.genre_ids[0]]}</td>
-                {
-                //  <td
-                //   className='text-red-800 cursor-pointer'
-                //   onClick={() => handleRemoveAndNotify(movieObj)}
-                // >
-                //   Delete
-                // </td> 
-                }
+                <td className='px-6 py-4'>{movieObj.vote_average}</td>
+                <td className='px-6 py-4'>{movieObj.popularity}</td>
+                <td
+                  className='px-6 py-4 text-red-600 cursor-pointer hover:text-red-800 transition-colors'
+                  onClick={() => handleRemoveAndNotify(movieObj)}
+                >
+                  Delete
+                </td>
               </tr>
             ))}
           </tbody>
@@ -154,8 +124,8 @@ function Watchlist({ watchlist, handleRemoveFromWatchList }) {
       </div>
 
       {showNotification && (
-        <div className='fixed top-0 right-0 mt-4 mr-4 bg-green-500 text-white p-4 rounded shadow-lg'>
-          Deleted Successfully 🗑️
+        <div className='fixed top-0 right-0 mt-4 mr-4 bg-yellow-500 text-white p-4 rounded shadow-lg'>
+          "{deletedMovieTitle}" -- Deleted Successfully 🗑️
         </div>
       )}
     </>
