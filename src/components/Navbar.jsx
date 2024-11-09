@@ -1,3 +1,4 @@
+// CineHubNavbar.js
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaFilm } from 'react-icons/fa'; // Movie camera icon from Font Awesome
@@ -6,7 +7,6 @@ const CineHubNavbar = ({ searchQuery, onSearchChange, onSearch }) => {
   return (
     <div className="flex items-center justify-between px-8 py-4 bg-black text-white shadow-lg relative">
       {/* Navbar Background with Black Color */}
-
       <div className="flex items-center space-x-8 relative z-10">
         {/* CineHub Name with Movie Camera Icon */}
         <Link
@@ -34,8 +34,8 @@ const CineHubNavbar = ({ searchQuery, onSearchChange, onSearch }) => {
         </Link>
       </div>
 
-          {/* Search Bar */}
-          <form onSubmit={onSearch} className="flex items-center justify-center bg-black p-2 rounded-full shadow-lg w-1/3">
+      {/* Search Bar */}
+      <form onSubmit={onSearch} className="flex items-center justify-center bg-black p-2 rounded-full shadow-lg w-1/3">
         <input
           type="text"
           value={searchQuery}

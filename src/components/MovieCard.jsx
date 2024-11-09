@@ -1,34 +1,52 @@
-import React, { useState } from "react";
+// MovieCard.js
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function MovieCard({ movieObj, poster_path, name }) {
-  const [isFlipped, setIsFlipped] = useState(false);
+function MovieCard({ movieObj, poster_path, name, handleAddWatchlist, handleRemoveFromWatchList, watchlist }) {
+  const navigate = useNavigate();
   const imageUrl = `https://image.tmdb.org/t/p/original${poster_path}`;
-  const navigate = useNavigate(); // hook for redirection
 
-  const handleFlip = () => {
-    setIsFlipped(!isFlipped);
-  };
+  function doesContain(movieObj) {
+    return watchlist.some(watchlistMovie => watchlistMovie.id === movieObj.id);
+  }
 
   const handleNavigateToDetail = (e) => {
-    e.stopPropagation(); // Prevent card flip when navigating
+    e.stopPropagation(); // Prevent other onClick events
     navigate(`/movie/${movieObj.id}`); // Redirect to the movie detail page
   };
 
   return (
     <div className="relative w-[250px]">
-      <div className="relative h-[50vh] rounded-xl transition-transform duration-500 transform-style-3d perspective" onClick={handleFlip}>
-        {/* Front Side - Movie Poster */}
-        <div className={`absolute inset-0 bg-center bg-cover rounded-xl backface-hidden`} style={{ backgroundImage: `url(${imageUrl})` }} />
-        
-        {/* Back Side - (Optional) You can add this if you want to flip back */}
-        <div className="absolute inset-0 bg-gray-800 text-white p-4 rounded-xl rotate-y-180 backface-hidden">
-          <h3 className="text-lg font-bold mb-2">{name}</h3>
-        </div>
+      <div 
+        className="relative h-[50vh] bg-center bg-cover rounded-xl cursor-pointer"
+        style={{ backgroundImage: `url(${imageUrl})` }}
+        onClick={handleNavigateToDetail}
+      >
+        {doesContain(movieObj) ? (
+          <div 
+            onClick={(e) => { 
+              e.stopPropagation();
+              handleRemoveFromWatchList(movieObj);
+            }} 
+            className="absolute top-2 right-2 flex justify-center h-8 w-8 items-center rounded-lg" 
+            style={{ border: "1px solid black" }}
+          >
+            &#10060;
+          </div>
+        ) : (
+          <div 
+            onClick={(e) => { 
+              e.stopPropagation();
+              handleAddWatchlist(movieObj);
+            }} 
+            className="absolute top-2 right-2 flex justify-center h-8 w-8 items-center rounded-lg" 
+            style={{ border: "1px solid black" }}
+          >
+            &#128525;
+          </div>
+        )}
       </div>
-
-      {/* Movie Title below the image, click to navigate to movie detail page */}
-      <div onClick={handleNavigateToDetail} className="text-white text-center py-2 bg-gray-900/80 rounded-b-xl cursor-pointer">
+      <div className="text-white text-center py-2 bg-gray-900/80 rounded-b-xl">
         {name}
       </div>
     </div>
